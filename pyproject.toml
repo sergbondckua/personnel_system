@@ -1,7 +1,27 @@
 [project]
 name = "personnel-system"
+authors = [{ name = "sergbond", email = "" }]
+license = "MIT"
 version = "0.1.0"
 requires-python = ">=3.13"
+description = "Personnel management system"
+readme = "README.md"
 dependencies = [
-    "django>=6.0.6",
+    "django~=6.0.6",
+    "psycopg[binary]>=3.2,<4.0.0"
 ]
+
+
+[dependency-groups]
+dev = ["ruff~=0.15"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

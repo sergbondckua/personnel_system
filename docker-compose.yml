@@ -1,0 +1,46 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/django/Dockerfile
+    container_name: web_personnel_system
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    networks:
+      - personnel_network
+
+  db:
+    image: postgres:17.10
+    container_name: db_personnel_system
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:4.30
+    container_name: pgadmin_personnel_system
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - personnel_network
+
+volumes:
+  postgres_data:
+
+networks:
+  personnel_network:
+    driver: bridge
