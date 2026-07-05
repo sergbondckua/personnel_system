@@ -8,11 +8,13 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - 8000:8000
     volumes:
       - .:/app
+      - venv_data:/app/.venv
     networks:
       - personnel_network
 
@@ -20,13 +22,22 @@ services:
     image: postgres:17.10
     container_name: db_personnel_system
     restart: unless-stopped
+    expose:
+      - "5432"
     env_file:
       - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - personnel_network
 
   pgadmin:
-    image: dpage/pgadmin4:4.30
+    image: dpage/pgadmin4:9.16
     container_name: pgadmin_personnel_system
     restart: unless-stopped
     ports:
@@ -34,12 +45,14 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - personnel_network
 
 volumes:
   postgres_data:
+  venv_data:
 
 networks:
   personnel_network:

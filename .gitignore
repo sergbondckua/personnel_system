@@ -1,4 +1,37 @@
-/.idea
-/.idea/*
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+.venv/
+venv/
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Environment
 .env
-venv
+
+# IDE
+.idea/
+.idea/*
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Testing
+.coverage
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
