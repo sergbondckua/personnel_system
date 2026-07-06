@@ -7,8 +7,9 @@ requires-python = ">=3.13"
 description = "Personnel management system"
 readme = "README.md"
 dependencies = [
+    "black>=26.5.1",
     "django~=6.0.6",
-    "psycopg[binary]>=3.2,<4.0.0"
+    "psycopg[binary]>=3.2,<4.0.0",
 ]
 
 
