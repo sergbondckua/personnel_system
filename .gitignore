@@ -35,3 +35,7 @@ staticfiles/
 
 # Ruff
 .ruff_cache/
+
+# Database
+*.sqlite3
+*/migrations/*

@@ -9,13 +9,11 @@ class MilitaryRank(BaseModel):
     """
 
     name = models.CharField(max_length=100, unique=True, verbose_name="Назва")
-
     short_name = models.CharField(
-        max_length=30, unique=True, verbose_name="Скорочена назва"
+        max_length=50, unique=True, verbose_name="Скорочена назва"
     )
-
     order = models.PositiveSmallIntegerField(
-        unique=True, verbose_name="Порядок"
+        unique=True, verbose_name="Порядок сортування"
     )
 
     class Meta:
@@ -34,7 +32,6 @@ class MilitarySpecialty(BaseModel):
     """
 
     code = models.CharField(max_length=20, unique=True, verbose_name="Код ВОС")
-
     name = models.CharField(max_length=300, verbose_name="Назва")
 
     class Meta:
@@ -49,11 +46,10 @@ class MilitarySpecialty(BaseModel):
 
 class PersonnelCategory(BaseModel):
     """
-    Категорії по званню
+    Довідник категорій особового складу.
     """
 
     name = models.CharField(max_length=100, unique=True, verbose_name="Назва")
-
     short_name = models.CharField(
         max_length=30, blank=True, verbose_name="Скорочена назва"
     )
@@ -70,7 +66,7 @@ class PersonnelCategory(BaseModel):
 
 class TariffGrade(BaseModel):
     """
-    Тарифна сітка
+    Довідник тарифних розрядів.
     """
 
     number = models.PositiveSmallIntegerField(

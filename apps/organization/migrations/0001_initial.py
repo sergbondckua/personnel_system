@@ -184,7 +184,7 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 (
-                    "position_name",
+                    "name",
                     models.CharField(max_length=250, verbose_name="Назва посади"),
                 ),
                 (

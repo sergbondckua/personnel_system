@@ -94,7 +94,7 @@ class OrgUnit(BaseModel):
         verbose_name="Батьківський підрозділ",
     )
 
-    unit_type = models.ForeignKey(
+    type = models.ForeignKey(
         OrgUnitType,
         on_delete=models.PROTECT,
         related_name="org_units",
@@ -145,7 +145,7 @@ class OrgUnit(BaseModel):
         ]
 
     def __str__(self):
-        return f"{self.unit_type} {self.name}"
+        return f"{self.type} {self.name}"
 
 
 class StaffPosition(BaseModel):
@@ -154,19 +154,49 @@ class StaffPosition(BaseModel):
     """
 
     org_unit = models.ForeignKey(
-        OrgUnit,
+        "organization.OrgUnit",
         on_delete=models.CASCADE,
         related_name="staff_positions",
         verbose_name="Підрозділ",
     )
 
-    position_name = models.CharField(
+    position_number = models.PositiveIntegerField(
+        verbose_name="№ за штатом",
+    )
+
+    name = models.CharField(
         max_length=250,
         verbose_name="Назва посади",
     )
 
-    position_index = models.PositiveIntegerField(
-        verbose_name="№ за штатом",
+    military_rank = models.ForeignKey(
+        "references.MilitaryRank",
+        on_delete=models.PROTECT,
+        related_name="staff_positions",
+        verbose_name="Граничне військове звання",
+    )
+
+    military_specialty = models.ForeignKey(
+        "references.MilitarySpecialty",
+        on_delete=models.PROTECT,
+        related_name="staff_positions",
+        verbose_name="ВОС",
+    )
+
+    personnel_category = models.ForeignKey(
+        "references.PersonnelCategory",
+        on_delete=models.PROTECT,
+        related_name="staff_positions",
+        verbose_name="Категорія особового складу",
+    )
+
+    tariff_grade = models.ForeignKey(
+        "references.TariffGrade",
+        on_delete=models.PROTECT,
+        related_name="staff_positions",
+        null=True,
+        blank=True,
+        verbose_name="Тарифний розряд",
     )
 
     quantity = models.PositiveSmallIntegerField(
@@ -174,29 +204,15 @@ class StaffPosition(BaseModel):
         verbose_name="Кількість штатних одиниць",
     )
 
-    military_rank = models.ForeignKey(
-        MilitaryRank,
-        on_delete=models.PROTECT,
-    )
-
-    military_specialty = models.ForeignKey(
-        MilitarySpecialty,
-        on_delete=models.PROTECT,
-    )
-
-    personnel_category = models.ForeignKey(
-        PersonnelCategory,
-        on_delete=models.PROTECT,
-    )
-
-    tariff_grade = models.ForeignKey(
-        TariffGrade,
-        on_delete=models.PROTECT,
-        null=True,
+    notes = models.TextField(
         blank=True,
+        verbose_name="Примітки",
     )
 
-    notes = models.TextField(blank=True, verbose_name="Примітки")
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
 
     class Meta:
         db_table = "staff_position"
@@ -204,14 +220,14 @@ class StaffPosition(BaseModel):
         verbose_name_plural = "Штатні посади"
         ordering = (
             "org_unit",
-            "position_index",
+            "position_number",
         )
         constraints = [
             models.UniqueConstraint(
-                fields=("org_unit", "position_index"),
-                name="uq_staff_position_index",
-            )
+                fields=("org_unit", "position_number"),
+                name="uq_staff_position_number",
+            ),
         ]
 
-    def __str__(self):
-        return f"{self.position_index}. {self.position_name}"
+    def __str__(self) -> str:
+        return f"{self.position_number}. {self.name}"
