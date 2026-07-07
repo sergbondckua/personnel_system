@@ -1,6 +1,12 @@
 from django.db import models
 
 from apps.common.models import BaseModel
+from apps.references.models import (
+    MilitaryRank,
+    MilitarySpecialty,
+    PersonnelCategory,
+    TariffGrade,
+)
 
 
 class Organization(BaseModel):
@@ -70,6 +76,8 @@ class OrgUnitType(BaseModel):
 
 
 class OrgUnit(BaseModel):
+    """ """
+
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
@@ -138,3 +146,72 @@ class OrgUnit(BaseModel):
 
     def __str__(self):
         return f"{self.unit_type} {self.name}"
+
+
+class StaffPosition(BaseModel):
+    """
+    Рядок штатного розпису.
+    """
+
+    org_unit = models.ForeignKey(
+        OrgUnit,
+        on_delete=models.CASCADE,
+        related_name="staff_positions",
+        verbose_name="Підрозділ",
+    )
+
+    position_name = models.CharField(
+        max_length=250,
+        verbose_name="Назва посади",
+    )
+
+    position_index = models.PositiveIntegerField(
+        verbose_name="№ за штатом",
+    )
+
+    quantity = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name="Кількість штатних одиниць",
+    )
+
+    military_rank = models.ForeignKey(
+        MilitaryRank,
+        on_delete=models.PROTECT,
+    )
+
+    military_specialty = models.ForeignKey(
+        MilitarySpecialty,
+        on_delete=models.PROTECT,
+    )
+
+    personnel_category = models.ForeignKey(
+        PersonnelCategory,
+        on_delete=models.PROTECT,
+    )
+
+    tariff_grade = models.ForeignKey(
+        TariffGrade,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+
+    notes = models.TextField(blank=True, verbose_name="Примітки")
+
+    class Meta:
+        db_table = "staff_position"
+        verbose_name = "Штатна посада"
+        verbose_name_plural = "Штатні посади"
+        ordering = (
+            "org_unit",
+            "position_index",
+        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=("org_unit", "position_index"),
+                name="uq_staff_position_index",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.position_index}. {self.position_name}"
