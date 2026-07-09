@@ -150,18 +150,22 @@ class OrgUnit(BaseModel):
 
 class StaffPosition(BaseModel):
     """
-    Рядок штатного розпису.
+    Штатна посада.
+
+    Описує посаду штатного розпису в конкретному структурному підрозділі.
     """
 
     org_unit = models.ForeignKey(
-        "organization.OrgUnit",
+        OrgUnit,
         on_delete=models.CASCADE,
         related_name="staff_positions",
         verbose_name="Підрозділ",
     )
 
-    position_number = models.PositiveIntegerField(
-        verbose_name="№ за штатом",
+    position_number = models.CharField(
+        max_length=20,
+        verbose_name="Номер за штатом",
+        help_text="Номер посади відповідно до штатного розпису.",
     )
 
     name = models.CharField(
@@ -170,28 +174,28 @@ class StaffPosition(BaseModel):
     )
 
     military_rank = models.ForeignKey(
-        "references.MilitaryRank",
+        MilitaryRank,
         on_delete=models.PROTECT,
         related_name="staff_positions",
         verbose_name="Граничне військове звання",
     )
 
     military_specialty = models.ForeignKey(
-        "references.MilitarySpecialty",
+        MilitarySpecialty,
         on_delete=models.PROTECT,
         related_name="staff_positions",
-        verbose_name="ВОС",
+        verbose_name="Військово-облікова спеціальність",
     )
 
     personnel_category = models.ForeignKey(
-        "references.PersonnelCategory",
+        PersonnelCategory,
         on_delete=models.PROTECT,
         related_name="staff_positions",
         verbose_name="Категорія особового складу",
     )
 
     tariff_grade = models.ForeignKey(
-        "references.TariffGrade",
+        TariffGrade,
         on_delete=models.PROTECT,
         related_name="staff_positions",
         null=True,
@@ -199,7 +203,7 @@ class StaffPosition(BaseModel):
         verbose_name="Тарифний розряд",
     )
 
-    quantity = models.PositiveSmallIntegerField(
+    staff_count = models.PositiveIntegerField(
         default=1,
         verbose_name="Кількість штатних одиниць",
     )
@@ -218,16 +222,17 @@ class StaffPosition(BaseModel):
         db_table = "staff_position"
         verbose_name = "Штатна посада"
         verbose_name_plural = "Штатні посади"
-        ordering = (
-            "org_unit",
-            "position_number",
-        )
+
         constraints = [
             models.UniqueConstraint(
                 fields=("org_unit", "position_number"),
-                name="uq_staff_position_number",
+                name="uq_staff_position_org_unit_position_number",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(staff_count__gt=0),
+                name="ck_staff_position_staff_count_gt_0",
             ),
         ]
 
     def __str__(self) -> str:
-        return f"{self.position_number}. {self.name}"
+        return f"{self.position_number} - {self.name}"

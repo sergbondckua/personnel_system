@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Custom apps
     "apps.organization.apps.OrganizationConfig",
     "apps.references.apps.ReferencesConfig",
+    "apps.personnel.apps.PersonnelConfig",
+    "apps.assignments.apps.AssignmentsConfig",
 ]
 
 MIDDLEWARE = [

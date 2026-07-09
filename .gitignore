@@ -38,4 +38,5 @@ staticfiles/
 
 # Database
 *.sqlite3
-*/migrations/*
+migrations/
+apps/*/migrations/*

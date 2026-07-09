@@ -192,7 +192,7 @@ class Migration(migrations.Migration):
                     models.PositiveIntegerField(verbose_name="№ за штатом"),
                 ),
                 (
-                    "quantity",
+                    "staff_count",
                     models.PositiveSmallIntegerField(
                         default=1, verbose_name="Кількість штатних одиниць"
                     ),
