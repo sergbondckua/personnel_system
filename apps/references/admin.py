@@ -6,6 +6,7 @@ from apps.references.models import (
     MilitarySpecialty,
     PersonnelCategory,
     TariffGrade,
+    VacationType,
 )
 
 
@@ -26,9 +27,7 @@ class MilitaryRankAdmin(BaseAdmin):
         "short_name",
     )
 
-    ordering = (
-        "order",
-    )
+    ordering = ("order",)
 
 
 @admin.register(MilitarySpecialty)
@@ -47,9 +46,7 @@ class MilitarySpecialtyAdmin(BaseAdmin):
         "name",
     )
 
-    ordering = (
-        "code",
-    )
+    ordering = ("code",)
 
 
 @admin.register(PersonnelCategory)
@@ -75,14 +72,30 @@ class TariffGradeAdmin(BaseAdmin):
     Адміністрування тарифних розрядів.
     """
 
+    list_display = ("number",)
+
+    search_fields = ("number",)
+
+    ordering = ("number",)
+
+
+@admin.register(VacationType)
+class LeaveTypeAdmin(BaseAdmin):
+    """
+    Адміністрування видів відпусток.
+    """
+
     list_display = (
-        "number",
+        "name",
+        "annual_limit",
+        "is_active",
     )
+
+    list_filter = ("is_active",)
 
     search_fields = (
-        "number",
+        "name",
+        "short_name",
     )
 
-    ordering = (
-        "number",
-    )
+    ordering = ("name",)

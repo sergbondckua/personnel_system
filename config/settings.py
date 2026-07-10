@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.references.apps.ReferencesConfig",
     "apps.personnel.apps.PersonnelConfig",
     "apps.assignments.apps.AssignmentsConfig",
+    "apps.vacations.apps.VacationsConfig",
 ]
 
 MIDDLEWARE = [

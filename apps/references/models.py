@@ -81,3 +81,40 @@ class TariffGrade(BaseModel):
 
     def __str__(self):
         return str(self.number)
+
+
+class VacationType(BaseModel):
+    """
+    Довідник видів відпусток.
+    """
+
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+        verbose_name="Назва",
+    )
+
+    short_name = models.CharField(
+        max_length=30,
+        blank=True,
+        verbose_name="Скорочена назва",
+    )
+
+    annual_limit = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Максимум днів на рік",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активний",
+    )
+
+    class Meta:
+        db_table = "vacation_type"
+        verbose_name = "Вид відпустки"
+        verbose_name_plural = "Види відпусток"
+
+    def __str__(self) -> str:
+        return self.short_name or self.name

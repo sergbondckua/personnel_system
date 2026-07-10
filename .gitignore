@@ -38,5 +38,4 @@ staticfiles/
 
 # Database
 *.sqlite3
-migrations/
-apps/*/migrations/*
+apps/*/migrations/*.py
