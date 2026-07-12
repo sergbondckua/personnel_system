@@ -123,3 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+# Constants
+VACATION_MAX_UNIT_PERCENT = 30

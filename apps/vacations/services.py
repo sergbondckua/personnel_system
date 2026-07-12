@@ -1,7 +1,16 @@
-from django.core.exceptions import ValidationError
-from django.db.models import Q
+from __future__ import annotations
 
-from apps.vacations.enums import VacationStatus
+import math
+from typing import TYPE_CHECKING
+
+from django.conf import settings
+from django.core.exceptions import ValidationError
+
+from apps.assignments.services import AssignmentService
+from apps.vacations.selectors import VacationSelector
+
+if TYPE_CHECKING:
+    from apps.vacations.models import Vacation
 
 
 class VacationService:
@@ -10,16 +19,20 @@ class VacationService:
     """
 
     @classmethod
-    def validate(cls, vacation) -> None:
+    def validate(cls, vacation: Vacation) -> None:
         """
-        Виконує всі перевірки відпустки.
+        Виконує всі бізнес-перевірки відпустки.
+
+        Args:
+            vacation: Об'єкт відпустки.
         """
         cls.validate_dates(vacation)
         cls.validate_days(vacation)
         cls.validate_overlap(vacation)
+        cls.validate_unit_limit(vacation)
 
     @staticmethod
-    def validate_dates(vacation) -> None:
+    def validate_dates(vacation: Vacation) -> None:
         """
         Перевіряє коректність дат.
         """
@@ -33,36 +46,26 @@ class VacationService:
             )
 
     @staticmethod
-    def validate_days(vacation) -> None:
+    def validate_days(vacation: Vacation) -> None:
         """
-        Перевіряє кількість діб та річний ліміт виду відпустки.
+        Перевіряє кількість діб та річний ліміт.
         """
-        if vacation.days <= 0:
-            raise ValidationError(
-                {"days": ("Кількість діб повинна бути більшою за нуль.")}
-            )
 
         vacation_type = vacation.vacation_type
 
         if vacation_type.annual_limit is None:
             return
 
-        used_days = (
-            vacation.__class__.objects.filter(
-                person=vacation.person,
-                vacation_type=vacation_type,
-                status__in=[
-                    VacationStatus.APPROVED,
-                    VacationStatus.ACTIVE,
-                    VacationStatus.COMPLETED,
-                ],
-                date_from__year=vacation.date_from.year,
-            )
-            .exclude(pk=vacation.pk)
-            .values_list("days", flat=True)
+        vacations = VacationSelector.used_days(
+            person=vacation.person,
+            vacation_type=vacation_type,
+            year=vacation.date_from.year,
+            exclude_pk=vacation.pk,
         )
 
-        if sum(used_days) + vacation.days > vacation_type.annual_limit:
+        used_days = sum(item.days for item in vacations)
+
+        if used_days + vacation.days > vacation_type.annual_limit:
             raise ValidationError(
                 {
                     "days": (
@@ -73,28 +76,49 @@ class VacationService:
             )
 
     @staticmethod
-    def validate_overlap(vacation) -> None:
+    def validate_overlap(vacation: Vacation) -> None:
         """
-        Перевіряє відсутність перетину з іншими відпустками.
+        Перевіряє перетин відпусток.
         """
-        overlap = (
-            vacation.__class__.objects.filter(
-                person=vacation.person,
+        if VacationSelector.overlapping(vacation).exists():
+            raise ValidationError(
+                "У військовослужбовця вже існує відпустка на цей період."
             )
-            .exclude(pk=vacation.pk)
-            .exclude(status=VacationStatus.CANCELED)
-            .filter(
-                Q(date_from__lte=vacation.date_to),
-                Q(date_to__gte=vacation.date_from),
-            )
+
+    @staticmethod
+    def validate_unit_limit(vacation: Vacation) -> None:
+        """
+        Перевіряє, що кількість військовослужбовців
+        у відпустці не перевищує допустимий відсоток
+        у структурному підрозділі.
+        """
+        unit = AssignmentService.get_current_unit(vacation.person)
+
+        personnel_count = AssignmentService.get_active_personnel_count(unit)
+
+        if personnel_count == 0:
+            return
+
+        vacations_count = VacationSelector.active_in_unit(
+            org_unit=unit,
+            date_from=vacation.date_from,
+            date_to=vacation.date_to,
+            exclude_pk=vacation.pk,
+        ).count()
+
+        limit = max(
+            1,
+            math.ceil(
+                personnel_count * settings.VACATION_MAX_UNIT_PERCENT / 100
+            ),
         )
 
-        if overlap.exists():
+        if vacations_count + 1 > limit:
             raise ValidationError(
-                {
-                    "date_from": (
-                        "У військовослужбовця вже існує відпустка "
-                        "на цей період."
-                    )
-                }
+                (
+                    "Перевищено допустиму кількість "
+                    "військовослужбовців, які можуть "
+                    "одночасно перебувати у відпустці "
+                    "в цьому підрозділі."
+                )
             )

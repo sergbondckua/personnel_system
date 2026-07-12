@@ -1,45 +1,60 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.db import models
+
+if TYPE_CHECKING:
+    from apps.organization.models import OrgUnit
+    from apps.personnel.models import Person
 
 
 class AssignmentQuerySet(models.QuerySet):
     """
-    QuerySet для роботи з призначеннями.
+    QuerySet для роботи з призначеннями військовослужбовців.
     """
 
-    def active(self):
+    def active(self) -> models.QuerySet:
+        """
+        Повертає лише активні призначення.
+        """
         return self.filter(is_active=True)
 
-    def for_person(self, person):
-        return self.filter(person=person)
+    def inactive(self) -> models.QuerySet:
+        """
+        Повертає лише неактивні призначення.
+        """
+        return self.filter(is_active=False)
 
-    def current(self):
+    def current(self) -> models.QuerySet:
+        """
+        Повертає поточні призначення.
+        """
         return self.active()
 
-    def for_unit(self, org_unit):
+    def for_person(self, person: Person) -> models.QuerySet:
+        """
+        Повертає всі призначення військовослужбовця.
+        """
+        return self.filter(person=person)
+
+    def for_unit(self, org_unit: OrgUnit) -> models.QuerySet:
+        """
+        Повертає всі активні призначення підрозділу.
+        """
         return self.active().filter(
             staff_position__org_unit=org_unit,
         )
 
-
-class AssignmentManager(models.Manager):
-    """
-    Manager для моделі Assignment.
-    """
-
-    def get_queryset(self):
-        return AssignmentQuerySet(
-            self.model,
-            using=self._db,
+    def with_related(self) -> models.QuerySet:
+        """
+        Завантажує пов'язані моделі одним SQL-запитом.
+        """
+        return self.select_related(
+            "person",
+            "staff_position",
+            "staff_position__org_unit",
         )
 
-    def active(self):
-        return self.get_queryset().active()
 
-    def current(self):
-        return self.get_queryset().current()
-
-    def for_person(self, person):
-        return self.get_queryset().for_person(person)
-
-    def for_unit(self, org_unit):
-        return self.get_queryset().for_unit(org_unit)
+AssignmentManager = models.Manager.from_queryset(AssignmentQuerySet)

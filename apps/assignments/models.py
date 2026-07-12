@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from apps.assignments.managers import AssignmentManager
 from apps.common.models import BaseModel
 from apps.organization.models import StaffPosition

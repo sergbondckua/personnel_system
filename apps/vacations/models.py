@@ -4,7 +4,6 @@ from apps.common.models import BaseModel
 from apps.personnel.models import Person
 from apps.references.models import VacationType
 from apps.vacations.enums import VacationStatus
-from apps.vacations.services import VacationService
 
 
 class Vacation(BaseModel):
@@ -35,6 +34,7 @@ class Vacation(BaseModel):
     )
 
     days = models.PositiveSmallIntegerField(
+        editable=False,
         verbose_name="Кількість діб",
     )
 
@@ -80,14 +80,23 @@ class Vacation(BaseModel):
 
     def clean(self) -> None:
         """
-        Виконує бізнес-перевірки перед збереженням.
+        Виконує підготовку моделі до валідації.
         """
         super().clean()
 
-    def save(self, *args, **kwargs):
+        if self.date_from and self.date_to:
+            self.days = (self.date_to - self.date_from).days + 1
+
+        from apps.vacations.services import VacationService
+
         VacationService.validate(self)
+
+    def save(self, *args, **kwargs) -> None:
+        """
+        Зберігає відпустку.
+        """
         self.full_clean()
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.person} ({self.date_from} - {self.date_to})"
