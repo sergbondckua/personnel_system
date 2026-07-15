@@ -144,6 +144,25 @@ class OrgUnit(BaseModel):
             ),
         ]
 
+    @property
+    def full_name(self) -> str:
+        """
+        Повертає повний шлях структурного підрозділу.
+
+        Наприклад:
+        Навчальний центр → Навчальний відділ →
+        Циклова комісія БпАК → Відділення зв'язку
+        """
+        units: list[str] = []
+
+        current: OrgUnit | None = self
+
+        while current is not None:
+            units.append(current.short_name or current.name)
+            current = current.parent
+
+        return " → ".join(reversed(units))
+
     def __str__(self):
         return f"{self.type} {self.name}"
 

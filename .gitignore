@@ -39,3 +39,4 @@ staticfiles/
 # Database
 *.sqlite3
 apps/*/migrations/*.py
+/media/persons/

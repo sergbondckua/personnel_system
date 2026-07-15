@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Internal apps
+    "django_cleanup",
     # Custom apps
     "apps.organization.apps.OrganizationConfig",
     "apps.references.apps.ReferencesConfig",
@@ -120,9 +122,16 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+STATIC_URL = "/static/"
+STATIC_DIR = os.path.join(BASE_DIR, "static").replace("\\", "/")
 
-STATIC_URL = "static/"
+# Use STATICFILES_DIRS in debug mode and STATIC_ROOT in production
+STATICFILES_DIRS = [STATIC_DIR] if DEBUG else []
+STATIC_ROOT = None if DEBUG else STATIC_DIR
+
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media").replace("\\", "/")
 
 # Constants
 VACATION_MAX_UNIT_PERCENT = 30

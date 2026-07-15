@@ -7,14 +7,16 @@ requires-python = ">=3.13"
 description = "Personnel management system"
 readme = "README.md"
 dependencies = [
-    "black>=26.5.1",
-    "django~=6.0.6",
+    "black~=26.5.1",
+    "django~=6.0.7",
+    "django-cleanup>=9.0.0",
+    "pillow~=12.3.0",
     "psycopg[binary]>=3.2,<4.0.0",
 ]
 
 
 [dependency-groups]
-dev = ["ruff~=0.15"]
+dev = ["ruff~=0.15.21"]
 
 [tool.ruff]
 line-length = 79

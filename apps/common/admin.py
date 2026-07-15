@@ -14,3 +14,16 @@ class BaseAdmin(admin.ModelAdmin):
     save_on_top = True
     save_as = True
     show_full_result_count = True
+
+    fieldsets = (
+        (
+            "Системна інформація",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
+    )
