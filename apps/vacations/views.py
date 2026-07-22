@@ -1,13 +1,9 @@
-from calendar import monthrange
 from datetime import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from apps.common.utils.dates import month_name
-from apps.organization.tree import OrganizationTreeService
-from apps.vacations.schedule.calendar import CalendarService
-from apps.vacations.schedule_builder import VacationScheduleBuilder
+from apps.vacations.schedule.builder import VacationScheduleBuilder
 from apps.vacations.schedule.navigation import NavigationService
 from apps.common.localization.months import get_month
 from apps.vacations.forms import VacationScheduleFilterForm
@@ -39,36 +35,12 @@ class VacationScheduleView(LoginRequiredMixin, TemplateView):
             year = form.fields["year"].initial
             month = form.fields["month"].initial
 
-        first_day = date(
+        schedule = VacationScheduleBuilder.build(
             year,
-            month,
-            1,
         )
-
-        last_day = date(
-            year,
-            month,
-            monthrange(year, month)[1],
-        )
-
-        tree = OrganizationTreeService.build()
-
-        VacationScheduleBuilder.fill(
-            tree,
-            first_day,
-            last_day,
-        )
-
-        context["tree"] = tree
-
-        context["calendar"] = CalendarService.month(
-            year,
-            month,
-        )
-
+        context["schedule"] = schedule
         context["year"] = year
         context["month"] = month
-        context["month_name"] = month_name(today.month)
         context["page"] = PageContext(
             title="Графік відпусток",
             subtitle=f"{get_month(month).nominative} {year}",

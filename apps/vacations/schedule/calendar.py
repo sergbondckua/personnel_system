@@ -1,22 +1,13 @@
 from __future__ import annotations
 
 import calendar
-from dataclasses import dataclass
 from datetime import date
-
-
-@dataclass(slots=True, frozen=True)
-class CalendarDay:
-    """
-    Один день календаря.
-    """
-
-    date: date
-    day: int
-    weekday: int
-    weekday_short: str
-    is_today: bool
-    is_weekend: bool
+from apps.common.localization.months import get_month
+from apps.vacations.schedule.calendar_models import (
+    CalendarDay,
+    CalendarMonth,
+    CalendarYear,
+)
 
 
 class CalendarService:
@@ -25,7 +16,7 @@ class CalendarService:
     """
 
     @staticmethod
-    def month(year: int, month: int) -> list[CalendarDay]:
+    def build_month(year: int, month: int) -> list[CalendarDay]:
         """
         Повертає всі дні місяця.
         """
@@ -60,3 +51,30 @@ class CalendarService:
             )
 
         return result
+
+    @staticmethod
+    def build_year(
+        year: int,
+    ) -> CalendarYear:
+        """
+        Побудова календаря року.
+        """
+
+        months: list[CalendarMonth] = []
+
+        for month in range(1, 13):
+            months.append(
+                CalendarMonth(
+                    number=month,
+                    name=get_month(month).nominative,
+                    days=CalendarService.build_month(
+                        year,
+                        month,
+                    ),
+                )
+            )
+
+        return CalendarYear(
+            year=year,
+            months=months,
+        )

@@ -1,11 +1,9 @@
-{% load static %}
-
 <tr class="table-secondary">
-  <td colspan="{{ calendar|length|add:2 }}" class="table-secondary">
+  <td colspan="{{ schedule.calendar.total_days|add:2 }}" class="table-secondary">
     <span
         class="schedule-unit-name fw-semibold"
         style="margin-left: calc({{ node.level }} * var(--schedule-indent));">
-        {{ node.unit.name }}
+      {{ node.unit.name }}
     </span>
   </td>
 </tr>
@@ -17,11 +15,13 @@
         style="padding-left: calc(({{ node.level }} + 1) * var(--schedule-indent));">
       {{ person.assignment.person }}
     </td>
+
     <td class="schedule-second-column">
       {{ person.assignment.staff_position.name }}
     </td>
-    {% for day in calendar %}
-      {% if day.date in person.schedule %}
+
+    {% for cell in person.cells %}
+      {% if cell.active %}
         <td class="schedule-vacation"></td>
       {% else %}
         <td></td>

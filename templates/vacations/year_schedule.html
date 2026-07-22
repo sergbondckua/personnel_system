@@ -1,0 +1,13 @@
+<table class="table table-sm schedule-table">
+
+  {% include "vacations/components/calendar_header.html" %}
+
+  <tbody>
+
+  {% for node in schedule.units %}
+    {% include "organization/unit_schedule.html" %}
+  {% endfor %}
+
+  </tbody>
+
+</table>

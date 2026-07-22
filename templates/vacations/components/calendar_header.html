@@ -1,0 +1,44 @@
+<thead>
+
+<tr>
+
+  <th rowspan="2" class="sticky-column person-column">
+    Військовослужбовець
+  </th>
+
+  <th rowspan="2" class="sticky-column position-column">
+    Посада
+  </th>
+
+  {% for month in schedule.calendar.months %}
+
+    <th
+        colspan="{{ month.days|length }}"
+        class="text-center table-light"
+    >
+      {{ month.name }}
+    </th>
+
+  {% endfor %}
+
+</tr>
+
+<tr>
+
+  {% for month in schedule.calendar.months %}
+
+    {% for day in month.days %}
+
+      <th
+          class="text-center {% if day.is_today %}table-primary{% elif day.is_weekend %}table-secondary{% endif %}"
+      >
+        {{ day.day }}
+      </th>
+
+    {% endfor %}
+
+  {% endfor %}
+
+</tr>
+
+</thead>
