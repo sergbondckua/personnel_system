@@ -1,0 +1,49 @@
+<li>
+
+  <strong>
+
+    {{ node.unit.type.short_name }}
+
+    {{ node.unit.name }}
+
+  </strong>
+
+  {% if node.people %}
+
+    <ul>
+
+      {% for assignment in node.people %}
+
+        <li>
+
+          {{ assignment.person.military_rank.short_name }}
+
+          {{ assignment.person }}
+
+          —
+
+          {{ assignment.staff_position.name }}
+
+        </li>
+
+      {% endfor %}
+
+    </ul>
+
+  {% endif %}
+
+  {% if node.children %}
+
+    <ul>
+
+      {% for node in node.children %}
+
+        {% include "organization/unit_tree.html" %}
+
+      {% endfor %}
+
+    </ul>
+
+  {% endif %}
+
+</li>

@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 Vacation = apps.get_model("vacations", "Vacation")
 
+
 class VacationSelector:
     """
     ORM-запити для роботи з відпустками.
@@ -104,3 +105,17 @@ class VacationSelector:
             queryset = queryset.exclude(pk=exclude_pk)
 
         return queryset.distinct()
+
+    @staticmethod
+    def for_period(date_from: date, date_to: date):
+        """
+        Повертає всі відпустки, що перетинаються із заданим періодом.
+        """
+
+        return Vacation.objects.select_related(
+            "person",
+            "vacation_type",
+        ).filter(
+            date_from__lte=date_to,
+            date_to__gte=date_from,
+        )

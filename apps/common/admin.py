@@ -10,20 +10,31 @@ class BaseAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+
     list_per_page = 25
+
     save_on_top = True
+
     save_as = True
+
     show_full_result_count = True
 
-    fieldsets = (
-        (
-            "Системна інформація",
-            {
-                "classes": ("collapse",),
-                "fields": (
-                    "created_at",
-                    "updated_at",
-                ),
-            },
-        ),
-    )
+
+class ReadOnlyInline(admin.TabularInline):
+    """
+    Базовий readonly Inline.
+    """
+
+    extra = 0
+
+    can_delete = False
+
+    show_change_link = True
+
+    classes = ("tab",)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

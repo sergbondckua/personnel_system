@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -41,7 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Internal apps
     "django_cleanup",
+    "django_bootstrap5",
     # Custom apps
+    "apps.dashboard.apps.DashboardConfig",
     "apps.organization.apps.OrganizationConfig",
     "apps.references.apps.ReferencesConfig",
     "apps.personnel.apps.PersonnelConfig",
@@ -71,6 +74,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.dashboard.context_processors.navigation",
             ],
         },
     },

@@ -3,6 +3,10 @@ from django.utils.safestring import mark_safe
 
 from apps.common.admin import BaseAdmin
 from apps.personnel.models import Person
+from apps.personnel.inlines import (
+    AssignmentInline,
+    VacationInline,
+)
 
 
 @admin.register(Person)
@@ -10,6 +14,11 @@ class PersonAdmin(BaseAdmin):
     """
     Адміністрування військовослужбовців.
     """
+
+    inlines = (
+        AssignmentInline,
+        VacationInline,
+    )
 
     list_display = (
         "service_number",
@@ -105,7 +114,17 @@ class PersonAdmin(BaseAdmin):
                 )
             },
         ),
-    ) + BaseAdmin.fieldsets
+        (
+            "Системна інформація",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
+    )
 
     @admin.display(description="ПІБ")
     def full_name(self, obj: Person) -> str:

@@ -46,15 +46,38 @@ class AssignmentQuerySet(models.QuerySet):
             staff_position__org_unit=org_unit,
         )
 
-    def with_related(self) -> models.QuerySet:
+    def ordered(self) -> models.QuerySet:
         """
-        Завантажує пов'язані моделі одним SQL-запитом.
+        Сортування призначень для відображення.
+        """
+        return self.order_by(
+            "staff_position__org_unit__organization",
+            "staff_position__org_unit__sort_order",
+            "staff_position__position_number",
+            "person__last_name",
+            "person__first_name",
+        )
+
+    def with_all_related(self) -> models.QuerySet:
+        """
+        Завантажує всі пов'язані моделі,
+        необхідні кадровій системі.
         """
         return self.select_related(
             "person",
+            "person__military_rank",
+            "person__military_specialty",
             "staff_position",
             "staff_position__org_unit",
+            "staff_position__military_rank",
+            "staff_position__military_specialty",
         )
+
+    def with_related(self) -> models.QuerySet:
+        """
+        Завантажує всі пов'язані моделі одним SQL-запитом.
+        """
+        return self.with_all_related()
 
 
 AssignmentManager = models.Manager.from_queryset(AssignmentQuerySet)

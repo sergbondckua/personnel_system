@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  {% load static %}
+  {% load django_bootstrap5 %}
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Personnel System{% endblock %}</title>
+
+  {% bootstrap_css %}
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+{% include "includes/navbar.html" %}
+
+<div class="container-fluid">
+  <div class="row">
+
+    {% include "includes/sidebar.html" %}
+
+    <main class="col py-3">
+      {% include "includes/messages.html" %}
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+
+{% include "includes/footer.html" %}
+
+{% bootstrap_javascript %}
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

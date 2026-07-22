@@ -1,0 +1,12 @@
+{% if actions %}
+<div class="page-actions">
+    {% for action in actions %}
+        <a
+            href="{{ action.url }}"
+            class="btn btn-{{ action.style }} btn-sm"
+        >
+            {{ action.title }}
+        </a>
+    {% endfor %}
+</div>
+{% endif %}

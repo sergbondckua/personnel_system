@@ -33,20 +33,6 @@ class OrganizationAdmin(BaseAdmin):
 
     ordering = ("short_name",)
 
-    fieldsets = (
-        (
-            "Основна інформація",
-            {
-                "fields": (
-                    "short_name",
-                    "full_name",
-                    "code",
-                ),
-            },
-        ),
-        *BaseAdmin.fieldsets,
-    )
-
 
 @admin.register(OrgUnitType)
 class OrgUnitTypeAdmin(BaseAdmin):
@@ -70,20 +56,6 @@ class OrgUnitTypeAdmin(BaseAdmin):
     ordering = (
         "sort_order",
         "name",
-    )
-
-    fieldsets = (
-        (
-            "Основна інформація",
-            {
-                "fields": (
-                    "name",
-                    "short_name",
-                    "sort_order",
-                ),
-            },
-        ),
-        *BaseAdmin.fieldsets,
     )
 
 
@@ -134,39 +106,6 @@ class OrgUnitAdmin(BaseAdmin):
         "organization",
         "parent",
         "type",
-    )
-
-    fieldsets = (
-        (
-            "Основна інформація",
-            {
-                "fields": (
-                    "organization",
-                    "parent",
-                    "type",
-                ),
-            },
-        ),
-        (
-            "Назва",
-            {
-                "fields": (
-                    "name",
-                    "short_name",
-                    "code",
-                ),
-            },
-        ),
-        (
-            "Налаштування",
-            {
-                "fields": (
-                    "sort_order",
-                    "is_active",
-                ),
-            },
-        ),
-        *BaseAdmin.fieldsets,
     )
 
     @admin.display(
@@ -243,41 +182,6 @@ class StaffPositionAdmin(BaseAdmin):
         "military_specialty",
         "personnel_category",
         "tariff_grade",
-    )
-
-    fieldsets = (
-        (
-            "Основна інформація",
-            {
-                "fields": (
-                    "org_unit",
-                    "position_number",
-                    "name",
-                ),
-            },
-        ),
-        (
-            "Штатні параметри",
-            {
-                "fields": (
-                    "military_rank",
-                    "military_specialty",
-                    "personnel_category",
-                    "tariff_grade",
-                    "staff_count",
-                ),
-            },
-        ),
-        (
-            "Додаткова інформація",
-            {
-                "fields": (
-                    "notes",
-                    "is_active",
-                ),
-            },
-        ),
-        *BaseAdmin.fieldsets,
     )
 
     def get_queryset(self, request) -> QuerySet[StaffPosition]:

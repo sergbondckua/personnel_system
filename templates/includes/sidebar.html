@@ -1,0 +1,29 @@
+<nav class="sidebar">
+
+  <ul>
+    {% for item in sidebar %}
+      <li>
+        {% if item.url %}
+          <a href="{% url item.url %}">
+            {{ item.icon }} {{ item.title }}
+          </a>
+        {% else %}
+          <span>
+            {{ item.icon }} {{ item.title }}
+                    </span>
+        {% endif %}
+        {% if item.children %}
+          <ul>
+            {% for child in item.children %}
+              <li>
+                <a href="{% url child.url %}">
+                  {{ child.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

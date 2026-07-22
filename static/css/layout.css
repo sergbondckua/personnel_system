@@ -1,0 +1,96 @@
+.layout {
+    display: flex;
+}
+
+main {
+    flex: 1;
+    padding: 1rem;
+}
+
+/* ===========================
+   Page Header
+=========================== */
+
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .75rem;
+}
+
+.page-header__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.page-header__subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.page-header__actions {
+    display: flex;
+    gap: .5rem;
+}
+
+.page-header__navigation {
+    display: flex;
+    gap: .5rem;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.btn-icon {
+    min-width: 2.25rem;
+}
+
+/* ===========================
+   Page Actions
+=========================== */
+
+.page-actions {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+/* ===========================
+   Filter Bar
+=========================== */
+
+.filter-bar {
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-bar__field {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+}
+
+.filter-bar__field label {
+    margin-bottom: .35rem;
+    font-weight: 500;
+}
+
+.filter-bar__field input,
+.filter-bar__field select {
+    min-width: 120px;
+}
+
+.filter-bar__actions {
+    display: flex;
+    align-items: end;
+}

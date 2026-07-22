@@ -85,7 +85,17 @@ class AssignmentAdmin(BaseAdmin):
                 ),
             },
         ),
-    ) + BaseAdmin.fieldsets
+        (
+            "Системна інформація",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
+    )
 
     @admin.display(
         ordering="person__service_number",

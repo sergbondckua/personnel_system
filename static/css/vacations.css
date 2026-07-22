@@ -1,0 +1,54 @@
+:root {
+    --schedule-person-width: 320px;
+    --schedule-position-width: 220px;
+    --schedule-indent: 20px;
+
+    --schedule-vacation-color: #28a745;
+    --schedule-header-color: #e9ecef;
+}
+
+.schedule-wrapper {
+    overflow-x: auto;
+}
+
+.schedule-table {
+    white-space: nowrap;
+}
+
+.schedule-first-column {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 20;
+    min-width: 420px;
+}
+
+.schedule-second-column {
+    position: sticky;
+    left: var(--schedule-person-width);
+    background: #fff;
+    z-index: 20;
+    min-width: var(--schedule-person-width);
+}
+
+.schedule-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.schedule-vacation {
+    background: #28a745 !important;
+}
+
+.schedule-weekend {
+    background: #f8f9fa;
+}
+
+.schedule-today {
+    background: #dbeafe;
+}
+
+.schedule-unit-name {
+    display: inline-block;
+}

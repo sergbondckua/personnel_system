@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  Графік відпусток
+{% endblock %}
+
+{% block content %}
+
+  {% include "includes/page_header.html" with page=page navigation=page.navigation %}
+  {% include "includes/page_actions.html" with actions=page.actions %}
+  {% include "includes/filter_form.html" with form=page.filter_form %}
+
+  <div class="schedule-wrapper">
+
+    <table class="table table-sm schedule-table">
+      <thead>
+
+      <tr>
+
+        <th rowspan="2" style="min-width:280px;">
+          Військовослужбовець
+        </th>
+
+        <th rowspan="2" style="min-width:260px;">
+          Посада
+        </th>
+
+        {% for day in calendar %}
+
+          <th class="text-center {% if day.is_weekend %}table-secondary{% endif %}">
+            {{ day.weekday_short }}
+          </th>
+
+        {% endfor %}
+
+      </tr>
+
+      <tr>
+
+        {% for day in calendar %}
+
+          <th class="text-center {% if day.is_today %}table-primary{% elif day.is_weekend %}table-secondary{% endif %}">
+            {{ day.day }}
+          </th>
+
+        {% endfor %}
+
+      </tr>
+
+      </thead>
+      <tbody>
+      {% for node in tree %}
+        {% include "organization/unit_schedule.html" %}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

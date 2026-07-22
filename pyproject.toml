@@ -9,6 +9,7 @@ readme = "README.md"
 dependencies = [
     "black~=26.5.1",
     "django~=6.0.7",
+    "django-bootstrap5~=25.2",
     "django-cleanup>=9.0.0",
     "pillow~=12.3.0",
     "psycopg[binary]>=3.2,<4.0.0",
@@ -23,7 +24,7 @@ line-length = 79
 target-version = "py313"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["E", "F"]
 
 [tool.ruff.format]
 quote-style = "double"

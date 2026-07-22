@@ -1,0 +1,35 @@
+{% load static %}
+
+<tr class="table-secondary">
+  <td colspan="{{ calendar|length|add:2 }}" class="table-secondary">
+    <span
+        class="schedule-unit-name fw-semibold"
+        style="margin-left: calc({{ node.level }} * var(--schedule-indent));">
+        {{ node.unit.name }}
+    </span>
+  </td>
+</tr>
+
+{% for person in node.people %}
+  <tr>
+    <td
+        class="schedule-first-column"
+        style="padding-left: calc(({{ node.level }} + 1) * var(--schedule-indent));">
+      {{ person.assignment.person }}
+    </td>
+    <td class="schedule-second-column">
+      {{ person.assignment.staff_position.name }}
+    </td>
+    {% for day in calendar %}
+      {% if day.date in person.schedule %}
+        <td class="schedule-vacation"></td>
+      {% else %}
+        <td></td>
+      {% endif %}
+    {% endfor %}
+  </tr>
+{% endfor %}
+
+{% for node in node.children %}
+  {% include "organization/unit_schedule.html" %}
+{% endfor %}

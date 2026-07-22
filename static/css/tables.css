@@ -1,0 +1,27 @@
+/* ===========================
+   Tables
+=========================== */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.table tbody tr:hover td {
+    background: #f8f9fa;
+}
+
+.table-secondary td {
+    background: #e9ecef;
+    font-weight: 600;
+}
