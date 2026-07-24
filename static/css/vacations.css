@@ -8,33 +8,21 @@
 }
 
 .schedule-wrapper {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: calc(100vh - 220px);
 }
 
 .schedule-table {
     white-space: nowrap;
-}
-
-.schedule-first-column {
-    position: sticky;
-    left: 0;
-    background: #fff;
-    z-index: 20;
-    min-width: 420px;
-}
-
-.schedule-second-column {
-    position: sticky;
-    left: var(--schedule-person-width);
-    background: #fff;
-    z-index: 20;
-    min-width: var(--schedule-person-width);
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .schedule-table thead th {
     position: sticky;
     top: 0;
-    z-index: 30;
+    background: white;
+    z-index: 50;
 }
 
 .schedule-vacation {
@@ -51,4 +39,42 @@
 
 .schedule-unit-name {
     display: inline-block;
+}
+
+.schedule-table th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.schedule-table td {
+    vertical-align: middle;
+}
+
+.schedule-vacation {
+    background: #28a745 !important;
+}
+
+.table-secondary td {
+    font-weight: 600;
+}
+
+.schedule-table td,
+.schedule-table th {
+    padding: 4px 6px;
+}
+
+.schedule-wrapper {
+    overflow-x: auto;
+}
+
+.schedule-first-column,
+.schedule-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 20;
+}
+
+.schedule-table thead th:first-child {
+    z-index: 40;
 }
