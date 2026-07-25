@@ -90,3 +90,16 @@ class VacationScheduleView(LoginRequiredMixin, TemplateView):
         )
 
         return context
+
+
+def get_initial(self):
+    initial = super().get_initial()
+
+    if self.request.GET.get("person"):
+        initial["person"] = self.request.GET["person"]
+
+    if self.request.GET.get("date_from"):
+        initial["date_from"] = self.request.GET["date_from"]
+        initial["date_to"] = self.request.GET["date_from"]
+
+    return initial

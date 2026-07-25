@@ -25,6 +25,11 @@ class VacationScheduleBuilder:
 
         cls._collect_people(tree, people)
 
+        total_days = (date_to - date_from).days + 1
+
+        for person in people.values():
+            person.vacation_cells = [None] * total_days
+
         for vacation in vacations:
             person = people.get(vacation.person_id)
 
@@ -43,6 +48,10 @@ class VacationScheduleBuilder:
 
             while current <= last:
                 person.schedule[current] = vacation
+
+                index = (current - date_from).days
+                person.vacation_cells[index] = vacation
+
                 current += timedelta(days=1)
 
     @classmethod

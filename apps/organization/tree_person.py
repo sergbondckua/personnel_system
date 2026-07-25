@@ -14,3 +14,5 @@ class OrgTreePerson:
     assignment: Assignment
 
     schedule: dict[date, Vacation] = field(default_factory=dict)
+
+    vacation_cells: list[Vacation | None] = field(default_factory=list)

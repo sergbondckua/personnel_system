@@ -1,10 +1,8 @@
 {% load static %}
 
-<tr class="table-secondary">
-  <td colspan="{{ calendar|length|add:2 }}" class="table-secondary">
-    <span
-        class="schedule-unit-name fw-semibold"
-        style="margin-left: calc({{ node.level }} * var(--schedule-indent));">
+<tr class="schedule-unit-row">
+  <td colspan="{{ calendar|length|add:2 }}" class="schedule-unit-cell">
+    <span class="schedule-unit-name schedule-level-{{ node.level }} fw-semibold">
         {{ node.unit.name }}
     </span>
   </td>
@@ -13,18 +11,34 @@
 {% for person in node.people %}
   <tr>
     <td
-        class="schedule-first-column"
-        style="padding-left: calc(({{ node.level }} + 1) * var(--schedule-indent));">
+        class="schedule-first-column schedule-level-{{ node.level }}">
       {{ person.assignment.person }}
     </td>
     <td class="schedule-second-column text-nowrap">
       {{ person.assignment.staff_position.name }}
     </td>
-    {% for day in calendar %}
-      {% if day.date in person.schedule %}
-        <td class="schedule-vacation"></td>
+    {% for vacation in person.vacation_cells %}
+      {% if vacation %}
+        <td
+            class="schedule-status-{{ vacation.status }} schedule-vacation-cell"
+            data-bs-toggle="popover"
+            data-bs-trigger="hover focus"
+            data-bs-html="true"
+            data-bs-placement="top"
+            data-bs-content="
+                <b>{{ vacation.vacation_type.name }}</b><br>
+                {{ vacation.date_from|date:'d.m.Y' }} - {{ vacation.date_to|date:'d.m.Y' }}<br>
+                Статус: {{ vacation.get_status_display }}<br><br>
+
+                <a class='btn btn-sm btn-primary'
+                href='/admin/vacations/vacation/{{ vacation.id }}/change/'
+                target='_blank'>
+                Відкрити
+                </a>
+            ">
+        </td>
       {% else %}
-        <td></td>
+        <td class="schedule-empty-cell"></td>
       {% endif %}
     {% endfor %}
   </tr>

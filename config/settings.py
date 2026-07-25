@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_cleanup",
     "django_bootstrap5",
     # Custom apps
+    "apps.common.apps.CommonConfig",
     "apps.dashboard.apps.DashboardConfig",
     "apps.organization.apps.OrganizationConfig",
     "apps.references.apps.ReferencesConfig",
