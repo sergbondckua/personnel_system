@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+  <h2>Відпустка</h2>
+
+  <table class="table">
+
+    <tr>
+      <th>Військовослужбовець</th>
+      <td>{{ vacation.person }}</td>
+    </tr>
+
+    <tr>
+      <th>Вид</th>
+      <td>{{ vacation.vacation_type }}</td>
+    </tr>
+
+    <tr>
+      <th>Початок</th>
+      <td>{{ vacation.date_from }}</td>
+    </tr>
+
+    <tr>
+      <th>Кінець</th>
+      <td>{{ vacation.date_to }}</td>
+    </tr>
+
+    <tr>
+      <th>Діб</th>
+      <td>{{ vacation.days }}</td>
+    </tr>
+
+    <tr>
+      <th>Статус</th>
+      <td>{{ vacation.get_status_display }}</td>
+    </tr>
+
+    <tr>
+      <th>Наказ</th>
+      <td>{{ vacation.order_number }}</td>
+    </tr>
+
+    <tr>
+      <th>Примітки</th>
+      <td>{{ vacation.notes|linebreaks }}</td>
+    </tr>
+
+  </table>
+  <div class="mt-3">
+
+    <a href="{% url 'vacations:list' %}"
+       class="btn btn-secondary">
+        Назад
+    </a>
+
+    <a href="{% url 'vacations:update' vacation.id %}"
+       class="btn btn-primary">
+        Редагувати
+    </a>
+
+    <a href="#"
+       class="btn btn-danger">
+        Видалити
+    </a>
+
+</div>
+
+{% endblock %}

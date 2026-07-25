@@ -93,3 +93,16 @@ document.addEventListener("mouseup", () => {
         `&date_to=${last.dataset.date}`;
 
 });
+document.querySelectorAll(".schedule-empty-cell").forEach(cell => {
+
+    cell.addEventListener("click", () => {
+
+        const person = cell.dataset.person;
+        const date = cell.dataset.date;
+
+        window.location.href =
+            `/vacations/create/?person=${person}&date_from=${date}&date_to=${date}`;
+
+    });
+
+});

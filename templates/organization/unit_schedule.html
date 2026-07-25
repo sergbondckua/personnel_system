@@ -3,44 +3,57 @@
 <tr class="schedule-unit-row">
   <td colspan="{{ calendar|length|add:2 }}" class="schedule-unit-cell">
     <span class="schedule-unit-name schedule-level-{{ node.level }} fw-semibold">
-        {{ node.unit.name }}
+      {{ node.unit.name }}
     </span>
   </td>
 </tr>
 
 {% for person in node.people %}
   <tr>
-    <td
-        class="schedule-first-column schedule-level-{{ node.level }}">
+    <td class="schedule-first-column schedule-level-{{ node.level }}">
       {{ person.assignment.person }}
     </td>
+
     <td class="schedule-second-column text-nowrap">
       {{ person.assignment.staff_position.name }}
     </td>
-    {% for vacation in person.vacation_cells %}
-      {% if vacation %}
+
+    {% for cell in person.cells %}
+
+      {% if cell.vacation %}
+
         <td
-            class="schedule-status-{{ vacation.status }} schedule-vacation-cell"
+            class="schedule-status-{{ cell.vacation.status }} schedule-vacation-cell"
             data-bs-toggle="popover"
             data-bs-trigger="hover focus"
             data-bs-html="true"
             data-bs-placement="top"
             data-bs-content="
-                <b>{{ vacation.vacation_type.name }}</b><br>
-                {{ vacation.date_from|date:'d.m.Y' }} - {{ vacation.date_to|date:'d.m.Y' }}<br>
-                Статус: {{ vacation.get_status_display }}<br><br>
+          <b>{{ cell.vacation.vacation_type.name }}</b><br>
+          {{ cell.vacation.date_from|date:'d.m.Y' }} -
+          {{ cell.vacation.date_to|date:'d.m.Y' }}<br>
+          Статус: {{ cell.vacation.get_status_display }}<br><br>
 
-                <a class='btn btn-sm btn-primary'
-                href='/admin/vacations/vacation/{{ vacation.id }}/change/'
-                target='_blank'>
-                Відкрити
-                </a>
-            ">
+          <a class='btn btn-sm btn-primary'
+             href='{% url "vacations:detail" cell.vacation.id %}'
+             target='_blank'>
+             Відкрити
+          </a>
+        ">
         </td>
+
       {% else %}
-        <td class="schedule-empty-cell"></td>
+
+        <td
+            class="schedule-empty-cell"
+            data-person="{{ person.assignment.person.id }}"
+            data-date="{{ cell.date|date:'Y-m-d' }}">
+        </td>
+
       {% endif %}
+
     {% endfor %}
+
   </tr>
 {% endfor %}
 

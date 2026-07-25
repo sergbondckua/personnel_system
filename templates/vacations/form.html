@@ -1,18 +1,39 @@
 {% extends "layouts/base.html" %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 
-  <h2>Створення відпустки</h2>
+  <h2>
+    {% if vacation %}
+      Редагування відпустки
+    {% else %}
+      Створення відпустки
+    {% endif %}
+  </h2>
 
   <form method="post">
 
     {% csrf_token %}
 
-    {{ form.as_p }}
+    {% bootstrap_form form %}
 
-    <button class="btn btn-primary">
+    <button class="btn btn-success">
       Зберегти
     </button>
+
+    {% if vacation %}
+      <a
+          href="{% url 'vacations:detail' vacation.id %}"
+          class="btn btn-secondary">
+        Назад
+      </a>
+    {% else %}
+      <a
+          href="{% url 'vacations:list' %}"
+          class="btn btn-secondary">
+        Назад
+      </a>
+    {% endif %}
 
   </form>
 

@@ -7,16 +7,13 @@ from datetime import date
 
 @dataclass(slots=True, frozen=True)
 class CalendarDay:
-    """
-    Один день календаря.
-    """
-
     date: date
     day: int
     weekday: int
     weekday_short: str
     is_today: bool
     is_weekend: bool
+    index: int
 
 
 class CalendarService:
@@ -45,7 +42,7 @@ class CalendarService:
             "Нд",
         )
 
-        for day in range(1, days + 1):
+        for index, day in enumerate(range(1, days + 1)):
             current = date(year, month, day)
 
             result.append(
@@ -56,6 +53,7 @@ class CalendarService:
                     weekday_short=WEEKDAYS[current.weekday()],
                     is_today=current == today,
                     is_weekend=current.weekday() >= 5,
+                    index=index,
                 )
             )
 

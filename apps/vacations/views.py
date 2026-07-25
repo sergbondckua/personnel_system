@@ -2,10 +2,11 @@ from calendar import monthrange
 from datetime import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView
 
 from apps.common.utils.dates import month_name
 from apps.organization.tree import OrganizationTreeService
+from apps.vacations.models import Vacation
 from apps.vacations.schedule.calendar import CalendarService
 from apps.vacations.schedule_builder import VacationScheduleBuilder
 from apps.vacations.schedule.navigation import NavigationService
@@ -15,6 +16,11 @@ from apps.common.page import (
     PageAction,
     PageContext,
 )
+from apps.vacations.selectors_list import VacationListSelector
+from django.urls import reverse_lazy, reverse
+from django.views.generic import UpdateView
+
+from apps.vacations.forms import VacationForm
 
 
 class VacationScheduleView(LoginRequiredMixin, TemplateView):
@@ -90,6 +96,73 @@ class VacationScheduleView(LoginRequiredMixin, TemplateView):
         )
 
         return context
+
+
+class VacationListView(LoginRequiredMixin, ListView):
+    model = Vacation
+    template_name = "vacations/list.html"
+    context_object_name = "vacations"
+
+    def get_queryset(self):
+        return VacationListSelector.all()
+
+
+class VacationDetailView(LoginRequiredMixin, DetailView):
+    model = Vacation
+
+    template_name = "vacations/detail.html"
+
+    context_object_name = "vacation"
+
+
+class VacationUpdateView(LoginRequiredMixin, UpdateView):
+    model = Vacation
+
+    form_class = VacationForm
+
+    template_name = "vacations/form.html"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "vacations:detail",
+            kwargs={"pk": self.object.pk},
+        )
+
+
+class VacationCreateView(LoginRequiredMixin, CreateView):
+    model = Vacation
+
+    form_class = VacationForm
+
+    template_name = "vacations/form.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        person = self.request.GET.get("person")
+        date_from = self.request.GET.get("date_from")
+        date_to = self.request.GET.get("date_to")
+
+        if person:
+            initial["person"] = person
+
+        if date_from:
+            initial["date_from"] = date_from
+
+        if date_to:
+            initial["date_to"] = date_to
+        elif date_from:
+            initial["date_to"] = date_from
+
+        return initial
+
+    def get_success_url(self):
+        return reverse(
+            "vacations:detail",
+            kwargs={
+                "pk": self.object.pk,
+            },
+        )
 
 
 def get_initial(self):

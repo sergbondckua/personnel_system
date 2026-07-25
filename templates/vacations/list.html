@@ -1,10 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends "layouts/base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+  <h3>Відпустки</h3>
+
+  <a
+    href="{% url 'vacations:create' %}"
+    class="btn btn-success mb-3">
+    Додати відпустку
+</a>
+
+  <table class="table table-striped">
+
+    <thead>
+    <tr>
+      <th>Військовослужбовець</th>
+      <th>Вид</th>
+      <th>Початок</th>
+      <th>Кінець</th>
+      <th>Статус</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    {% for vacation in vacations %}
+
+      <tr>
+        <td>
+          <a href="{% url 'vacations:detail' vacation.id %}">
+            {{ vacation.person }}
+          </a>
+        </td>
+        <td>{{ vacation.vacation_type }}</td>
+        <td>{{ vacation.date_from }}</td>
+        <td>{{ vacation.date_to }}</td>
+        <td>
+
+          {% if vacation.status == "planned" %}
+            <span class="badge text-bg-secondary">Запланована</span>
+
+          {% elif vacation.status == "approved" %}
+            <span class="badge text-bg-success">Погоджена</span>
+
+          {% elif vacation.status == "active" %}
+            <span class="badge text-bg-primary">У відпустці</span>
+
+          {% elif vacation.status == "completed" %}
+            <span class="badge text-bg-dark">Завершена</span>
+
+          {% else %}
+            <span class="badge text-bg-danger">Скасована</span>
+
+          {% endif %}
+
+        </td>
+      </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+  </table>
+
+{% endblock %}
